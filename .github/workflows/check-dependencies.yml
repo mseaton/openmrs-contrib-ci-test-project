@@ -40,6 +40,6 @@ jobs:
             cat target/versions.yml
             echo "***** Previous Output Hash *****"
             cat .ci-dependencies.yml
-            cmp -s .ci-dependencies.yml .target/versions.yml && echo 'Dependencies Match' || echo 'Dependencies Differ'
+            cmp -s .ci-dependencies.yml target/versions.yml && echo 'Dependencies Match' || echo 'Dependencies Differ'
 
       # Next steps will be to issue a commit back if versions differ, using personal key, to kick off snapshot build
