@@ -1,11 +1,11 @@
-# For every commit pushed to the master branch, this will compile, package, test, verify, and deploy
-# This is only configured to deploy to the SNAPSHOTS repository, so is not intended to be used for releases
+# Checks whether any Maven dependencies have been updated remotely, and if so, initiates a new build
 
 name: Check for dependency updates
 
 on:
-  schedule:
-    - cron: '*/30 * * * *'
+
+#  schedule:
+#    - cron: '*/30 * * * *'
 
   repository_dispatch:
     types: ['check-dependencies']
@@ -19,21 +19,9 @@ jobs:
       # Check out the code
     - uses: actions/checkout@v2
 
-      # Ensure cache exists to compare previous executions
-    - name: Create directory to store previous executions
-      run: mkdir -p $HOME/hashes && touch $HOME/hashes/previous-hash.json
-
-      # Enable cache exists for Maven dependencies.
-    - uses: actions/cache@v1
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-repo
-
-      # Enable caching of previous hashes for comparison in later jobs.  See https://github.com/actions/cache
-    - uses: actions/cache@v1
-      with:
-        path: $HOME/hashes
-        key: ${{ runner.os }}-hash-dir
+      # Caching is not supported for all triggers, so we commit back to project
+    - name: Ensure previous version hash file exists
+      run: touch .ci-dependencies.yml
 
       # Set up Java 1.8 with Maven.  See https://github.com/actions/setup-java
     - name: Set up JDK 1.8 and Maven settings file
@@ -43,13 +31,15 @@ jobs:
 
       # Execute the Maven command to build a hash of the current dependencies, forcing an update of snapshots
     - name: Maven Hash Dependencies
-      run: mvn generate-resources -U --file pom.xml
+      run: mvn generate-resources --file pom.xml
 
       # Compare against the latest version to determine if there are new dependencies found
     - name: Compare current hash to previous
       run:  |
             echo "***** Current Output Hash *****"
-            cat target/hash-output.json
+            cat target/versions.yml
             echo "***** Previous Output Hash *****"
-            cat $HOME/hashes/previous-hash.json
-            cmp -s target/hash-output.json $HOME/hashes/previous-hash.json && echo 'Dependencies Match' || echo 'Dependencies Differ'
+            cat .ci-dependencies.yml
+            cmp -s .ci-dependencies.yml .target/versions.yml && echo 'Dependencies Match' || echo 'Dependencies Differ'
+
+      # Next steps will be to issue a commit back if versions differ, using personal key, to kick off snapshot build

@@ -564,6 +564,7 @@
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>hash</goal>
+                            <goal>versions</goal>
                         </goals>
                     </execution>
                 </executions>
