@@ -5,7 +5,7 @@ name: Check for dependency updates
 
 on:
   schedule:
-    cron: '*/5 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   deploy:
