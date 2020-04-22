@@ -11,11 +11,12 @@ on:
     types: ['check-dependencies']
 
 jobs:
-  deploy:
+  check-dependencies:
     runs-on: ubuntu-latest
     env:
       CURRENT_HASH: 'target/hash-output.json'
       PREVIOUS_HASH: '~/hashes/previous-hash.json'
+
     steps:
 
       # Check out the code
@@ -23,10 +24,7 @@ jobs:
 
       # Ensure cache exists to compare previous executions
     - name: Create directory to store previous executions
-      run: mkdir -p ~/hashes
-
-    - name: Ensure previous execution has exists for comparison
-      run: touch $PREVIOUS_HASH
+      run: mkdir -p ~/hashes && touch "$PREVIOUS_HASH"
 
       # Enable caching of previous hashes for comparison in later jobs.  See https://github.com/actions/cache
     - uses: actions/cache@v1
