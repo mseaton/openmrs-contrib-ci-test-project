@@ -545,10 +545,10 @@
                     <version>1.0.0-SNAPSHOT</version>
                     <configuration>
                         <exclusions>
-                            <depencency>
+                            <dependency>
                                 <groupId>org.openmrs.module</groupId>
                                 <artifactId>reporting-omod</artifactId>
-                            </depencency>
+                            </dependency>
                         </exclusions>
                     </configuration>
                 </plugin>
@@ -575,7 +575,7 @@
         <repository>
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
-            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+            <url>https://openmrs.jfrog.io/artifactory/public/</url>
         </repository>
     </repositories>
 
@@ -583,9 +583,9 @@
         <pluginRepository>
             <id>openmrs-repo</id>
             <name>OpenMRS Nexus Repository</name>
-            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+            <url>https://openmrs.jfrog.io/artifactory/public/</url>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
