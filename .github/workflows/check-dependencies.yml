@@ -14,8 +14,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      CURRENT_HASH=target/hash-output.json
-      PREVIOUS_HASH=~/hashes/previous-hash.json
+      CURRENT_HASH: 'target/hash-output.json'
+      PREVIOUS_HASH: '~/hashes/previous-hash.json'
     steps:
 
       # Check out the code
