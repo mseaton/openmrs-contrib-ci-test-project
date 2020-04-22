@@ -46,6 +46,10 @@ jobs:
       run: mvn generate-resources -U --file pom.xml
 
       # Compare against the latest version to determine if there are new dependencies found
-    - name: Ensure comparison file exists
-      run:  cmp -s target/hash-output.json $HOME/hashes/previous-hash.json && echo 'Dependencies Match' || echo 'Dependencies Differ'
-
+    - name: Compare current hash to previous
+      run:  |
+            echo "***** Current Output Hash *****"
+            cat target/hash-output.json
+            echo "***** Previous Output Hash *****"
+            cat $HOME/hashes/previous-hash.json
+            cmp -s target/hash-output.json $HOME/hashes/previous-hash.json && echo 'Dependencies Match' || echo 'Dependencies Differ'
