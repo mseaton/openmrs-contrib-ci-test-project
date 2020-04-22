@@ -1,0 +1,47 @@
+# For every commit pushed to the master branch, this will compile, package, test, verify, and deploy
+# This is only configured to deploy to the SNAPSHOTS repository, so is not intended to be used for releases
+
+name: Check for dependency updates
+
+on:
+  schedule:
+    cron: '*/5 * * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CURRENT_HASH=target/hash-output.json
+      PREVIOUS_HASH=~/hashes/previous-hash.json
+    steps:
+
+      # Check out the code
+    - uses: actions/checkout@v2
+
+      # Ensure cache exists to compare previous executions
+    - name: Create directory to store previous executions
+      run: mkdir -p ~/hashes
+
+    - name: Ensure previous execution has exists for comparison
+      run: touch $PREVIOUS_HASH
+
+      # Enable caching of previous hashes for comparison in later jobs.  See https://github.com/actions/cache
+    - uses: actions/cache@v1
+      with:
+        path: ~/hashes
+        key: ${{ runner.os }}-hash-dir
+
+      # Set up Java 1.8 with Maven.  See https://github.com/actions/setup-java
+    - name: Set up JDK 1.8 and Maven settings file
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+      # Execute the Maven command to build a hash of the current dependencies
+    - name: Maven Hash Dependencies
+      run: mvn generate-resources -U --file pom.xml
+
+      # Compare against the latest version to determine if there are new dependencies found
+    - name: Ensure comparison file exists
+      run:  cmp -s $CURRENT_HASH $PREVIOUS_HASH && echo 'Dependencies Match' || echo 'Dependencies Differ'
+
