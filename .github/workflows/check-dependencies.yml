@@ -5,7 +5,10 @@ name: Check for dependency updates
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/30 * * * *'
+
+  repository_dispatch:
+    types: ['check-dependencies']
 
 jobs:
   deploy:
