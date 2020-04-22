@@ -14,8 +14,8 @@ jobs:
   check-dependencies:
     runs-on: ubuntu-latest
     env:
-      CURRENT_HASH: 'target/hash-output.json'
-      PREVIOUS_HASH: '$HOME/hashes/previous-hash.json'
+      CURRENT_HASH: target/hash-output.json
+      PREVIOUS_HASH: ${{ HOME }}/hashes/previous-hash.json
 
     steps:
 
@@ -24,7 +24,7 @@ jobs:
 
       # Ensure cache exists to compare previous executions
     - name: Create directory to store previous executions
-      run: mkdir -p $HOME/hashes && touch "$PREVIOUS_HASH"
+      run: mkdir -p ${{ HOME }}/hashes && touch ${{ PREVIOUS_HASH }}
 
       # Enable caching of previous hashes for comparison in later jobs.  See https://github.com/actions/cache
     - uses: actions/cache@v1
