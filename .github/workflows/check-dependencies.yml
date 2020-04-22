@@ -23,6 +23,12 @@ jobs:
     - name: Create directory to store previous executions
       run: mkdir -p $HOME/hashes && touch $HOME/hashes/previous-hash.json
 
+      # Enable cache exists for Maven dependencies.
+    - uses: actions/cache@v1
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-repo
+
       # Enable caching of previous hashes for comparison in later jobs.  See https://github.com/actions/cache
     - uses: actions/cache@v1
       with:
@@ -35,7 +41,7 @@ jobs:
       with:
         java-version: 1.8
 
-      # Execute the Maven command to build a hash of the current dependencies
+      # Execute the Maven command to build a hash of the current dependencies, forcing an update of snapshots
     - name: Maven Hash Dependencies
       run: mvn generate-resources -U --file pom.xml
 
