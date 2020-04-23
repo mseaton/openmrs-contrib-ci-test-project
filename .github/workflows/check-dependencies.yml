@@ -31,7 +31,7 @@ jobs:
 
       # Execute the Maven command to build a hash of the current dependencies, forcing an update of snapshots
     - name: Maven Hash Dependencies
-      run: mvn generate-resources --file pom.xml
+      run: mvn generate-resources -X --file pom.xml
 
       # Compare against the latest version to determine if there are new dependencies found
     - name: Compare current hash to previous
